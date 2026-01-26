@@ -1,68 +1,92 @@
-import { StyleSheet } from "react-native";
-import COLORS from "../../constants/colors";
+import { StyleSheet, Dimensions, Platform } from "react-native";
+
+const { width } = Dimensions.get("window");
 
 export default StyleSheet.create({
-  image: {
-    width: "100%",
-    height: 260,
-    backgroundColor: "#eee",
+  headerImageBox: {
+    position: "absolute",
+    top: -50,
+    width,
+    height: Platform.OS === "ios" ? 420 : 380,
+    overflow: "hidden",
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
   },
 
-  header: {
+  headerImage: {
+    width: "100%",
+    height: "100%",
+  },
+
+  gradient: {
+    position: "absolute",
+    bottom: 0,
+    height: 180,
+    width: "100%",
+  },
+
+  topButtons: {
+    position: "absolute",
+    top: 50,
+    left: 16,
+    right: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  circleBtn: {
+    backgroundColor: "rgba(0,0,0,0.45)",
+    padding: 10,
+    borderRadius: 20,
+  },
+
+  contentBox: {
     padding: 16,
   },
 
   title: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: "700",
-    color: COLORS.text,
   },
 
   caption: {
-    marginTop: 6,
-    color: COLORS.gray,
+    marginTop: 10,
+    color: "#666",
+    lineHeight: 22,
   },
 
-  actionRow: {
+  likeRow: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
     gap: 10,
-  },
-
-  likeText: {
-    color: COLORS.gray,
+    marginVertical: 14,
   },
 
   commentTitle: {
-    padding: 16,
     fontWeight: "600",
+    fontSize: 16,
+    marginTop: 6,
   },
 
   commentItem: {
     flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    padding: 16,
+    gap: 10,
   },
 
-  commentAvatar: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    marginRight: 10,
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#ddd",
   },
 
-  commentBody: {
-    flex: 1,
-  },
-
-  commentUser: {
+  user: {
     fontWeight: "600",
   },
 
-  commentText: {
-    color: COLORS.gray,
+  comment: {
+    color: "#666",
   },
 
   inputRow: {
@@ -73,17 +97,17 @@ export default StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
+    backgroundColor: "#fff",
     borderTopWidth: 1,
     borderColor: "#eee",
-    backgroundColor: "#fff",
   },
 
   input: {
     flex: 1,
-    marginRight: 10,
-    backgroundColor: "#f1f1f1",
-    borderRadius: 20,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 22,
     paddingHorizontal: 14,
     paddingVertical: 8,
+    marginRight: 10,
   },
 });

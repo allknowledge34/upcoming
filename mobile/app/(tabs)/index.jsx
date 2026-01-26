@@ -242,39 +242,62 @@ export default function Home() {
   if (loading) return <Loader />;
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={books}
-        renderItem={renderItem}
-        keyExtractor={(item) => item._id}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => fetchBooks(1, true)}
-            colors={[COLORS.primary]}
+  <View style={styles.container}>
+    <FlatList
+      data={books}
+      renderItem={renderItem}
+      keyExtractor={(item) => item._id}
+      contentContainerStyle={styles.listContainer}
+      showsVerticalScrollIndicator={false}
+
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={() => fetchBooks(1, true)}
+          colors={[COLORS.primary]}      // Android
+          tintColor={COLORS.primary}     // iOS
+        />
+      }
+
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.2}
+
+      ListHeaderComponent={
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>DmilFit 💪</Text>
+          <Text style={styles.headerSubtitle}>
+            Discover workouts shared by the community👇
+          </Text>
+        </View>
+      }
+
+      ListFooterComponent={
+        hasMore && books.length > 0 ? (
+          <ActivityIndicator
+            style={styles.footerLoader}
+            size="small"
+            color={COLORS.primary}
           />
-        }
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.1}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>DmilFit 💪</Text>
-            <Text style={styles.headerSubtitle}>
-              Discover workouts shared by the community👇
+        ) : null
+      }
+
+      ListEmptyComponent={
+        !loading && (
+          <View style={styles.emptyContainer}>
+            <Ionicons
+              name="fitness-outline"
+              size={64}
+              color={COLORS.textSecondary}
+            />
+            <Text style={styles.emptyText}>No workouts yet</Text>
+            <Text style={styles.emptySubtext}>
+              Be the first to share your fitness routine 💪
             </Text>
           </View>
-        }
-        ListFooterComponent={
-          hasMore ? (
-            <ActivityIndicator
-              style={styles.footerLoader}
-              size="small"
-              color={COLORS.primary}
-            />
-          ) : null
-        }
-      />
-    </View>
-  );
+        )
+      }
+    />
+  </View>
+);
+
 }

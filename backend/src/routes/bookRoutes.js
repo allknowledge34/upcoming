@@ -3,6 +3,9 @@ import cloudinary from "../lib/cloudinary.js";
 import Book from "../models/Book.js";
 import BookComment from "../models/BookComment.js";
 import protectRoute from "../middleware/auth.middleware.js";
+import Notification from "../models/notification.js";
+
+
 
 const router = express.Router();
 
@@ -139,6 +142,16 @@ router.post("/:id/comment", protectRoute, async (req, res) => {
       $push: { comments: comment._id },
     });
 
+    if (book.user.toString() !== req.user._id.toString()) {
+  await Notification.create({
+    from: req.user._id,
+    to: book.user,
+    type: "comment",
+    book: book._id,
+    comment: comment._id,
+  });
+}
+
     res.status(201).json(comment);
   } catch (error) {
     console.log("Error adding comment", error);
@@ -199,5 +212,6 @@ router.delete("/:id", protectRoute, async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 export default router;
