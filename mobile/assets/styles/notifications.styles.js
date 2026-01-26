@@ -4,7 +4,7 @@ export default StyleSheet.create({
   screen: { flex: 1, backgroundColor: "#fff" },
 
   header: {
-    padding: 16,
+    padding: 10,
     borderBottomWidth: 1,
     borderColor: "#eee",
   },
@@ -16,7 +16,7 @@ export default StyleSheet.create({
 
   card: {
     flexDirection: "row",
-    padding: 16,
+    padding: 36,
     borderBottomWidth: 1,
     borderColor: "#f1f1f1",
   },
@@ -27,6 +27,18 @@ export default StyleSheet.create({
     borderRadius: 24,
     marginRight: 12,
   },
+
+  reloadBtn: {
+  marginTop: 16,
+  paddingHorizontal: 24,
+  paddingVertical: 10,
+  borderRadius: 20,
+  backgroundColor: "#ff7a00",
+},
+reloadText: {
+  color: "#fff",
+  fontWeight: "600",
+},
 
   content: { flex: 1 },
 
