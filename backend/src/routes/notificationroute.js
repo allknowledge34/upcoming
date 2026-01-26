@@ -4,28 +4,44 @@ import Notification from "../models/notification.js";
 
 const router = express.Router();
 
-// GET ALL NOTIFICATIONS
+// GET NOTIFICATIONS (PAGINATED + SAFE)
 router.get("/", protectRoute, async (req, res) => {
   try {
-    const notifications = await Notification.find({ to: req.user._id })
+    const page = Number(req.query.page) || 1;
+    const limit = 20;
+
+    const notifications = await Notification.find({
+      to: req.user._id,
+    })
       .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
       .populate("from", "username profileImage")
       .populate("book", "title image")
       .populate("comment", "content");
 
     res.json(notifications);
   } catch (error) {
-    console.log("Notification fetch error", error);
-    res.status(500).json({ message: "Server error" });
+    console.log("Notification fetch error:", error);
+    res.status(500).json({ message: "Failed to fetch notifications" });
   }
 });
 
-// DELETE NOTIFICATION
+// DELETE NOTIFICATION (OWNER ONLY)
 router.delete("/:id", protectRoute, async (req, res) => {
   try {
-    await Notification.findByIdAndDelete(req.params.id);
-    res.json({ message: "Deleted" });
+    const deleted = await Notification.findOneAndDelete({
+      _id: req.params.id,
+      to: req.user._id,
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
+
+    res.json({ message: "Deleted successfully" });
   } catch (error) {
+    console.log("Delete error:", error);
     res.status(500).json({ message: "Delete failed" });
   }
 });
