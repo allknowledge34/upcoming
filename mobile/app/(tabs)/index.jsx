@@ -17,6 +17,8 @@ import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
 import { formatPublishDate } from "../../lib/utils";
 import COLORS from "../../constants/colors";
 import Loader from "../../components/Loader";
+import { Platform, ToastAndroid, Alert } from "react-native";
+
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -113,8 +115,8 @@ export default function Home() {
               isLiked: !liked,
               likes: liked
                 ? book.likes.filter(
-                    (uid) => uid.toString() !== userId
-                  )
+                  (uid) => uid.toString() !== userId
+                )
                 : [...book.likes, userId],
             };
           }
@@ -187,7 +189,10 @@ export default function Home() {
             </TouchableOpacity>
 
             {/* Repeat */}
-            <TouchableOpacity style={styles.actionBtn}>
+            <TouchableOpacity 
+            activeOpacity={0.8}
+              onPress={showComingSoon}
+            style={styles.actionBtn}>
               <Feather name="repeat" size={18} color="#657786" />
               <Text style={styles.actionText}>0</Text>
             </TouchableOpacity>
@@ -213,7 +218,10 @@ export default function Home() {
             </TouchableOpacity>
 
             {/* Share */}
-            <TouchableOpacity style={styles.actionBtn}>
+            <TouchableOpacity 
+            style={styles.actionBtn}
+            activeOpacity={0.8}
+              onPress={showComingSoon}>
               <Feather name="share" size={18} color="#657786" />
             </TouchableOpacity>
           </View>
@@ -221,6 +229,15 @@ export default function Home() {
       </View>
     </TouchableOpacity>
   );
+
+  const showComingSoon = () => {
+    if (Platform.OS === "android") {
+      ToastAndroid.show("Coming soon..", ToastAndroid.SHORT);
+    } else {
+      Alert.alert("Coming soon..");
+    }
+  };
+
 
   // ================= RATING =================
   const renderRatingStars = (rating) => {
@@ -242,62 +259,67 @@ export default function Home() {
   if (loading) return <Loader />;
 
   return (
-  <View style={styles.container}>
-    <FlatList
-      data={books}
-      renderItem={renderItem}
-      keyExtractor={(item) => item._id}
-      contentContainerStyle={styles.listContainer}
-      showsVerticalScrollIndicator={false}
+    <View style={styles.container}>
+      <FlatList
+        data={books}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id}
+        contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
 
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => fetchBooks(1, true)}
-          colors={[COLORS.primary]}      // Android
-          tintColor={COLORS.primary}     // iOS
-        />
-      }
-
-      onEndReached={handleLoadMore}
-      onEndReachedThreshold={0.2}
-
-      ListHeaderComponent={
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>DmilFit 💪</Text>
-          <Text style={styles.headerSubtitle}>
-            Discover workouts shared by the community👇
-          </Text>
-        </View>
-      }
-
-      ListFooterComponent={
-        hasMore && books.length > 0 ? (
-          <ActivityIndicator
-            style={styles.footerLoader}
-            size="small"
-            color={COLORS.primary}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchBooks(1, true)}
+            colors={[COLORS.primary]}      // Android
+            tintColor={COLORS.primary}     // iOS
           />
-        ) : null
-      }
+        }
 
-      ListEmptyComponent={
-        !loading && (
-          <View style={styles.emptyContainer}>
-            <Ionicons
-              name="fitness-outline"
-              size={64}
-              color={COLORS.textSecondary}
-            />
-            <Text style={styles.emptyText}>No workouts yet</Text>
-            <Text style={styles.emptySubtext}>
-              Be the first to share your fitness routine 💪
-            </Text>
+        onEndReached={handleLoadMore}
+        onEndReachedThreshold={0.2}
+
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.searchCard}
+              activeOpacity={0.8}
+              onPress={showComingSoon}
+            >
+              <Ionicons name="search" size={18} color="#777" />
+              <Text style={styles.searchPlaceholder}>Search here</Text>
+            </TouchableOpacity>
           </View>
-        )
-      }
-    />
-  </View>
-);
+        }
+
+
+        ListFooterComponent={
+          hasMore && books.length > 0 ? (
+            <ActivityIndicator
+              style={styles.footerLoader}
+              size="small"
+              color={COLORS.primary}
+            />
+          ) : null
+        }
+
+        ListEmptyComponent={
+          !loading && (
+            <View style={styles.emptyContainer}>
+              <Ionicons
+                name="fitness-outline"
+                size={64}
+                color={COLORS.textSecondary}
+              />
+              <Text style={styles.emptyText}>No workouts yet</Text>
+              <Text style={styles.emptySubtext}>
+                Be the first to share your fitness routine 💪
+              </Text>
+            </View>
+          )
+        }
+      />
+    </View>
+  );
 
 }

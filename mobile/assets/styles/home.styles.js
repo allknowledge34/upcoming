@@ -18,21 +18,33 @@ const styles = StyleSheet.create({
     paddingBottom: 80,
   },
   header: {
-    marginBottom: 20,
+    paddingHorizontal: 4,
+    marginBottom: 18,
+  },
+
+  searchCard: {
+    flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#fff",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+
+    elevation: 4,
   },
-  headerTitle: {
-    fontSize: 24,
-    fontFamily: "JetBrainsMono-Medium",
-    letterSpacing: 0.5,
-    color: COLORS.primary,
-    marginBottom: 8,
-  },
-  headerSubtitle: {
+
+  searchPlaceholder: {
+    marginLeft: 8,
     fontSize: 14,
-    color: COLORS.textSecondary,
-    textAlign: "center",
+    color: "#888",
+    fontWeight: "500",
   },
+
   bookCard: {
     backgroundColor: COLORS.cardBackground,
     borderRadius: 16,
@@ -81,7 +93,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 12,
-    maxWidth: 300, 
+    maxWidth: 300,
   },
 
   actionBtn: {
