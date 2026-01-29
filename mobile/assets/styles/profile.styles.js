@@ -169,6 +169,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 14,
   },
+  settingsIcon: {
+  position: "absolute",
+  right: 12,
+  top: 12,
+  zIndex: 10,
+},
+
 });
 
 export default styles;
