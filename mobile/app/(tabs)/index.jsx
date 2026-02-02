@@ -18,6 +18,7 @@ import { formatPublishDate } from "../../lib/utils";
 import COLORS from "../../constants/colors";
 import Loader from "../../components/Loader";
 import { Platform, ToastAndroid, Alert } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -25,6 +26,7 @@ export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export default function Home() {
   const { token, user } = useAuthStore();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   // ⭐ IMPORTANT: single source of truth
   const userId = user?._id || user?.id;
@@ -259,7 +261,7 @@ export default function Home() {
   if (loading) return <Loader />;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <FlatList
         data={books}
         renderItem={renderItem}

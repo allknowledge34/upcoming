@@ -20,6 +20,8 @@ import { useAuthStore } from "../../store/authStore";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { API_URL } from "../../constants/api";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 
 export default function Create() {
   const [title, setTitle] = useState("");
@@ -28,6 +30,8 @@ export default function Create() {
   const [image, setImage] = useState(null); 
   const [imageBase64, setImageBase64] = useState(null);
   const [loading, setLoading] = useState(false);
+  const insets = useSafeAreaInsets();
+
 
   const router = useRouter();
   const { token } = useAuthStore();
@@ -143,7 +147,7 @@ export default function Create() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1, paddingTop: insets.top }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView contentContainerStyle={styles.container} style={styles.scrollViewStyle}>

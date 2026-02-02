@@ -5,10 +5,10 @@ const { width } = Dimensions.get("window");
 export default StyleSheet.create({
   headerImageBox: {
     position: "absolute",
-    top: -50,
+    top: -35,
     width,
-    height: Platform.OS === "ios" ? 420 : 380,
     overflow: "hidden",
+    zIndex: 10,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
   },
@@ -27,7 +27,7 @@ export default StyleSheet.create({
 
   topButtons: {
     position: "absolute",
-    top: 50,
+    top: 100,
     left: 16,
     right: 16,
     flexDirection: "row",

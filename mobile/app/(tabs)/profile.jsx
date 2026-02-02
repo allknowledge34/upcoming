@@ -19,12 +19,14 @@ import COLORS from "../../constants/colors";
 import { Image } from "expo-image";
 import { sleep } from ".";
 import Loader from "../../components/Loader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Profile() {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [deleteBookId, setDeleteBookId] = useState(null);
+  const insets = useSafeAreaInsets();
 
   const { token } = useAuthStore();
 
@@ -131,7 +133,7 @@ const handleRefresh = async () => {
 if (isLoading && !refreshing) return <Loader />;
 
 return (
-  <View style={styles.container}>
+  <View style={[styles.container, { paddingTop: insets.top }]}>
     <ProfileHeader />
     <LogoutButton />
 
