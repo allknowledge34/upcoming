@@ -20,8 +20,12 @@ import { API_URL } from "../../constants/api";
 import { useAuthStore } from "../../store/authStore";
 import styles from "../../assets/styles/workoutDetail.styles";
 import COLORS from "../../constants/colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useWindowDimensions } from "react-native";
 
-const HEADER_HEIGHT = Platform.OS === "ios" ? 420 : 380;
+
+
+
 
 export default function WorkoutDetail() {
   const { id } = useLocalSearchParams();
@@ -34,17 +38,19 @@ export default function WorkoutDetail() {
   const [refreshing, setRefreshing] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
   const [error, setError] = useState(false);
+  const insets = useSafeAreaInsets();
+
+  const HEADER_HEIGHT = 420 + insets.top;
+
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const controllerRef = useRef(null);
 
   useEffect(() => {
-    StatusBar.setBarStyle("light-content");
-    StatusBar.setTranslucent(true);
-    StatusBar.setBackgroundColor("transparent");
+  StatusBar.setBarStyle("light-content");
+}, []);
 
-    return () => controllerRef.current?.abort();
-  }, []);
+
 
   const fetchBook = async (isRefresh = false) => {
     try {
@@ -166,7 +172,8 @@ export default function WorkoutDetail() {
   });
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+    <View style={{ flex: 1, paddingTop: 0 }}>
+
       <Animated.FlatList
         data={book.comments}
         keyExtractor={(i, index) => i._id || index.toString()}
@@ -220,10 +227,10 @@ export default function WorkoutDetail() {
       <Animated.View
         style={[
           styles.headerImageBox,
-          { transform: [{ translateY: imageTranslate }] },
+          { height: HEADER_HEIGHT, transform: [{ translateY: imageTranslate }] },
         ]}
       >
-        <Image source={{ uri: book.image }} style={styles.headerImage} />
+        <Image source={{ uri: book.image }} style={styles.headerImage} contentFit="cover" />
 
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.85)"]}

@@ -3,6 +3,8 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 import styles from "@/assets/styles/settings.styles";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 
 export default function PrivacyAndSecurityScreen() {
   const [twoFactor, setTwoFactor] = useState(false);
@@ -11,9 +13,11 @@ export default function PrivacyAndSecurityScreen() {
   const [email, setEmail] = useState(true);
   const [marketing, setMarketing] = useState(false);
   const [share, setShare] = useState(false);
+  const insets = useSafeAreaInsets();
+
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, paddingTop: insets.top }}>
       {/* HEADER */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>

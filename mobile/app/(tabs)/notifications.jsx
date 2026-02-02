@@ -114,7 +114,7 @@ export default function Notifications() {
     );
 
   return (
-    <View style={[styles.screen]}>
+    <View style={[styles.screen, { paddingTop: insets.top }]}>
       <View style={styles.header}>
         <Text style={styles.title}>Notifications</Text>
       </View>
