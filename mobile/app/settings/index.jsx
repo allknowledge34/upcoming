@@ -1,20 +1,65 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
-import { ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+  Linking,
+  ToastAndroid,
+  Share,
+  Platform,
+} from "react-native";
 import styles from "@/assets/styles/settings.styles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-
 export default function PrivacyAndSecurityScreen() {
-  const [twoFactor, setTwoFactor] = useState(false);
-  const [biometric, setBiometric] = useState(true);
   const [push, setPush] = useState(true);
   const [email, setEmail] = useState(true);
-  const [marketing, setMarketing] = useState(false);
-  const [share, setShare] = useState(false);
   const insets = useSafeAreaInsets();
 
+  /* ---------- HANDLERS ---------- */
+
+  const showComingSoon = () => {
+      if (Platform.OS === "android") {
+        ToastAndroid.show("Coming soon..", ToastAndroid.SHORT);
+      } else {
+        Alert.alert("Coming soon..");
+      }
+    };
+
+  const openLink = (url) => {
+    Linking.openURL(url).catch(() =>
+      Alert.alert("Error", "Unable to open link")
+    );
+  };
+
+  const contactEmail = () => {
+    Linking.openURL("mailto:support@yourapp.com");
+  };
+
+  const shareApp = async () => {
+    await Share.share({
+      message:
+        "Check out this awesome app 🚀\nhttps://yourapp.com",
+    });
+  };
+
+  const rateApp = () => {
+    const url =
+      Platform.OS === "android"
+        ? "market://details?id=com.yourapp"
+        : "https://apps.apple.com/app/idYOUR_APP_ID";
+
+    Linking.openURL(url).catch(() =>
+      Alert.alert("Error", "Unable to open store")
+    );
+  };
+
+  /* ---------- UI ---------- */
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -27,67 +72,66 @@ export default function PrivacyAndSecurityScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
+        {/* SECURITY */}
         <Text style={styles.section}>Security</Text>
 
-        <Card icon="lock-closed-outline" title="Change Password" />
+        <Card
+          icon="lock-closed-outline"
+          title="Privacy Policy"
+          onPress={() => openLink("https://yourapp.com/privacy")}
+        />
 
-        <ToggleCard
+        <Card
           icon="shield-checkmark-outline"
-          title="Two-Factor Authentication"
-          value={twoFactor}
-          onChange={setTwoFactor}
+          title="Terms and Conditions"
+          onPress={() => openLink("https://yourapp.com/terms")}
         />
 
-        <ToggleCard
-          icon="finger-print-outline"
-          title="Biometric Login"
-          value={biometric}
-          onChange={setBiometric}
-        />
-
-        <Text style={styles.section}>Privacy</Text>
+        {/* GENERAL */}
+        <Text style={styles.section}>General</Text>
 
         <ToggleCard
           icon="notifications-outline"
           title="Push Notifications"
           value={push}
-          onChange={setPush}
+          onChange={() => showComingSoon()}
         />
 
         <ToggleCard
           icon="mail-outline"
           title="Email Notifications"
           value={email}
-          onChange={setEmail}
+          onChange={() => showComingSoon()}
         />
 
-        <ToggleCard
-          icon="megaphone-outline"
-          title="Marketing Emails"
-          value={marketing}
-          onChange={setMarketing}
-        />
+        <Card icon="share-outline" title="Share App" onPress={shareApp} />
 
-        <ToggleCard
-          icon="analytics-outline"
-          title="Share Usage Data"
-          value={share}
-          onChange={setShare}
-        />
+        <Card icon="star-outline" title="Rate App" onPress={rateApp} />
 
+        {/* ACCOUNT */}
         <Text style={styles.section}>Account</Text>
 
-        <Card icon="time-outline" title="Account Activity" />
-        <Card icon="phone-portrait-outline" title="Connected Devices" />
-        <Card icon="download-outline" title="Download Your Data" />
+        <Card
+          icon="mail-outline"
+          title="Contact us"
+          onPress={contactEmail}
+        />
+
+        <Card
+          icon="help-circle-outline"
+          title="General Inquiries"
+          onPress={contactEmail}
+        />
       </ScrollView>
     </View>
   );
 }
 
-function Card({ icon, title }) {
+/* ---------- COMPONENTS ---------- */
+
+function Card({ icon, title, onPress }) {
   return (
-    <TouchableOpacity style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={styles.row}>
         <Ionicons name={icon} size={22} color="#ff7a00" />
         <Text style={styles.title}>{title}</Text>
@@ -99,17 +143,26 @@ function Card({ icon, title }) {
 
 function ToggleCard({ icon, title, value, onChange }) {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={0.8}
+      onPress={onChange}
+    >
       <View style={styles.row}>
         <Ionicons name={icon} size={22} color="#ff7a00" />
         <Text style={styles.title}>{title}</Text>
       </View>
-      <Switch
-        value={value}
-        onValueChange={onChange}
-        trackColor={{ false: "#ddd", true: "#ff7a00" }}
-        thumbColor="#fff"
-      />
-    </View>
+
+      {/* 🔥 IMPORTANT FIX */}
+      <View pointerEvents="none">
+        <Switch
+          value={value}
+          disabled
+          trackColor={{ false: "#ddd", true: "#ff7a00" }}
+          thumbColor="#fff"
+        />
+      </View>
+    </TouchableOpacity>
   );
 }
+
